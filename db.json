@@ -1,3 +1,11 @@
 {
-  "products": []
+  "products": [
+    {
+      "title": "milk",
+      "price": 100,
+      "description": "cho to",
+      "image": "https://images.healthshots.com/healthshots/en/uploads/2021/11/11212048/milk.jpg",
+      "id": 1
+    }
+  ]
 }
