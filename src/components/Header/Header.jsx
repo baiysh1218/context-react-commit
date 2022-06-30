@@ -13,13 +13,17 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const pages = ["Products", "Pricing", "Blog"];
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+
+// const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -90,7 +94,11 @@ const Header = () => {
               <MenuItem
                 onClick={() => {
                   handleCloseNavMenu();
-                  navigate("/products");
+                  navigate(
+                    location.pathname === "/products"
+                      ? `/products${window.location.search}`
+                      : "/products"
+                  );
                 }}>
                 <Typography textAlign="center">Products</Typography>
               </MenuItem>
@@ -125,7 +133,11 @@ const Header = () => {
             <Button
               onClick={() => {
                 handleCloseNavMenu();
-                navigate("/products");
+                navigate(
+                  location.pathname === "/products"
+                    ? `/products${window.location.search}`
+                    : "/products"
+                );
               }}
               sx={{ my: 2, color: "white", display: "block" }}>
               Products
@@ -141,6 +153,11 @@ const Header = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            <IconButton
+              onClick={() => navigate("/cart")}
+              aria-label="add to shopping cart">
+              <AddShoppingCartIcon />
+            </IconButton>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

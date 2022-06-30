@@ -7,11 +7,16 @@ export const productsContext = React.createContext();
 const INIT_STATE = {
   products: [],
   oneProduct: null,
+  pages: 0,
 };
 function reducer(state = INIT_STATE, action) {
   switch (action.type) {
     case "GET_PRODUCTS":
-      return { ...state, products: action.payload };
+      return {
+        ...state,
+        products: action.payload.data,
+        pages: Math.ceil(action.payload.headers["x-total-count"] / 2),
+      };
     case "GET_ONE":
       return { ...state, oneProduct: action.payload };
     default:
@@ -31,10 +36,10 @@ const ProductsContextProvider = ({ children }) => {
   }
   // ! Read
   async function getProducts() {
-    const res = await axios(PRODUCTS_API);
+    const res = await axios(`${PRODUCTS_API}${window.location.search}`);
     dispatch({
       type: "GET_PRODUCTS",
-      payload: res.data,
+      payload: res,
     });
   }
   // ! Delete
@@ -42,24 +47,29 @@ const ProductsContextProvider = ({ children }) => {
     const res = await axios.delete(`${PRODUCTS_API}/${id}`);
     getProducts();
   }
-  // ! Deteils
+  // ! Deteils, Get for edit
   async function getOneProduct(id) {
     const res = await axios(`${PRODUCTS_API}/${id}`);
-    console.log(res);
     dispatch({
       type: "GET_ONE",
       payload: res.data,
     });
+  }
+  // ! Update
+  async function updataProduct(id, editedProduct) {
+    await axios.patch(`${PRODUCTS_API}/${id}`, editedProduct);
   }
   return (
     <productsContext.Provider
       value={{
         products: state.products,
         oneProduct: state.oneProduct,
+        pages: state.pages,
         createProduct,
         getProducts,
         deleteProduct,
         getOneProduct,
+        updataProduct,
       }}>
       {children}
     </productsContext.Provider>
